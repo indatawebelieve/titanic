@@ -22,7 +22,9 @@ plt.ylabel('Frequency')
 plt.show()
 
 ''' Some people of Upper class payed more, but also there are others 
-that payed the same as middle and lower class which is extrange '''
+that payed the same as middle and lower class which is extrange
+supposition: people that payed more and belogs to upper class have family
+therefore fare could be a derived variable from Pclass and SibSp and Parch '''
 plt.scatter(df['Fare'], df['Pclass'])
 plt.xlabel('Payed Fare')
 plt.ylabel('Class')
@@ -31,6 +33,15 @@ plt.text(450, 2.9, '2- Middle')
 plt.text(450, 2.8, '3- Lower')
 plt.show()
 
+for i in range(0, len(df)):
+	suma = int(df.at[i, 'SibSp']) + int(df.at[i, 'Parch'])
+	df.at[i, 'SibSpParch'] = suma
+
+# Waiting for a linear regression to confirm previous supposition, but didnt happen
+plt.scatter(df['SibSpParch'], df['Fare'])
+plt.show()
+
 # Most of people on the lower class, middle and upper are balanced
 plt.pie(df.groupby(['Pclass']).size(), autopct='%1.1f%%', labels=['1-Upper', '2-Middle', '3-Lower'])
 plt.show()
+
