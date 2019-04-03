@@ -50,3 +50,12 @@ print('Validation mean accuracy: ' + str(val_acc_sum/num_trainings))
 print('Testing mean accuracy: ' + str(test_acc_sum/num_trainings))
 
 
+submission = pd.read_csv(os.path.join('.', 'input', 'gender_submission.csv'))
+predictions = model.predict(test_x)
+processedpredictions = []
+for prediction in predictions:
+	survived = np.argmax(prediction)
+	processedpredictions.append(survived)
+
+submission['Survived'] = processedpredictions
+submission.to_csv(os.path.join('.', 'output', 'my_submission.csv'), index=False)

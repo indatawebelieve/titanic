@@ -61,7 +61,7 @@ def get_testds():
 
 	passengers = cuantify_sex(passengers)
 	passengers = clean_unnessesary_columns(passengers)
-	passengers = clean_nan_values(passengers)
+	#passengers = clean_nan_values(passengers)
 
 	return split_logits_labels(passengers, entire_df_size)
 
