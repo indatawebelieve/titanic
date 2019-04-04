@@ -9,7 +9,8 @@ df = pd.read_csv(os.path.join('.', 'input', 'train.csv'))
 print(df['Fare'].describe(percentiles=[0.25, 0.5, 0.75, 0.90, 0.95]))
 print(df['Age'].describe())
 
-print(df.agg({'Age': ['median'], 'Fare': ['median']}))
+plt.hist(df['Age'])
+plt.show()
 
 # Here we can see a big difference between male and female, more males
 plt.pie(df.groupby(['Sex']).size(), autopct='%1.1f%%', labels=['Female', 'Male'])

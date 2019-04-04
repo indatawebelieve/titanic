@@ -2,24 +2,26 @@ import os
 import pandas as pd
 import numpy as np
 
-def cuantify_sex(passengers):
-	for i in range(0, len(passengers)):
-		if passengers.at[i, 'Sex'] == 'male':
-			passengers.at[i, 'Sex'] = 0
-		elif passengers.at[i, 'Sex'] == 'female':
-			passengers.at[i, 'Sex'] = 1
+# convert categorical variables to numerical
+def cuantify_columns(passengers):
+	passengers['Sex'] = pd.get_dummies(passengers['Sex'])
+	passengers['Embarked'] = pd.get_dummies(passengers['Embarked'])
 
 	return passengers
 
+# delete columns that will not be used for predict
 def clean_unnessesary_columns(passengers):
-	return passengers.drop(columns=['PassengerId', 'Name', 'Ticket', 'Cabin', 'Embarked'])
+	return passengers.drop(columns=['PassengerId', 'Name', 'Ticket', 'Cabin'])
 
+# replace NaN values
 def clean_nan_values(passengers):
 	for i in range(0, len(passengers)):
 		if np.isnan(passengers.at[i, 'Age']):
-			passengers = passengers.drop([i])
+			# pretty centered distribution
+			passengers.at[i, 'Age'] = passengers['Age'].mean()
 		elif np.isnan(passengers.at[i, 'Fare']):
-			passengers = passengers.drop([i])
+			# biased distribution => use median
+			passengers.at[i, 'Fare'] = passengers['Fare'].median()
 
 	return passengers
 
@@ -44,7 +46,7 @@ def get_trainds():
 	passengers = pd.read_csv(os.path.join('.', 'input', 'train.csv'))
 	entire_df_size = len(passengers)
 
-	passengers = cuantify_sex(passengers)
+	passengers = cuantify_columns(passengers)
 	passengers = clean_unnessesary_columns(passengers)
 	passengers = clean_nan_values(passengers)	
 
@@ -59,9 +61,9 @@ def get_testds():
 		if passengers.at[i, 'PassengerId'] == labels.at[i, 'PassengerId']:
 			passengers.at[i, 'Survived'] = labels.at[i, 'Survived']
 
-	passengers = cuantify_sex(passengers)
+	passengers = cuantify_columns(passengers)
 	passengers = clean_unnessesary_columns(passengers)
-	#passengers = clean_nan_values(passengers)
+	passengers = clean_nan_values(passengers)
 
 	return split_logits_labels(passengers, entire_df_size)
 
